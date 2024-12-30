@@ -21,6 +21,7 @@ module mycpu_core(
     output wire [4:0] debug_wb_rf_wnum,
     output wire [31:0] debug_wb_rf_wdata
 );
+
     wire [`IF_TO_ID_WD-1:0] if_to_id_bus;
     wire [`ID_TO_EX_WD-1:0] id_to_ex_bus;
     wire [`EX_TO_MEM_WD-1:0] ex_to_mem_bus;
@@ -48,6 +49,7 @@ module mycpu_core(
         .rst             (rst             ),
         .stall           (stall           ),
         .br_bus          (br_bus          ),
+        
         .if_to_id_bus    (if_to_id_bus    ),
         .inst_sram_en    (inst_sram_en    ),
         .inst_sram_wen   (inst_sram_wen   ),

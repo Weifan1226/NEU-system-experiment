@@ -53,10 +53,10 @@ module WB(
     wire [31:0]lo_i;
      
     assign {
-        wb_pc,
-        rf_we,
-        rf_waddr,
-        rf_wdata
+        wb_pc, 
+        rf_we, 
+        rf_waddr, 
+        rf_wdata 
     } = mem_to_wb_bus_r;
     
     assign 

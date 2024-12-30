@@ -55,6 +55,7 @@ module regfile(
     wire [31:0] ex_result;
     wire ex_rf_we;
     wire [4:0] ex_rf_waddr;
+    
     assign {
         ex_rf_we,          // 37
         ex_rf_waddr,       // 36:32

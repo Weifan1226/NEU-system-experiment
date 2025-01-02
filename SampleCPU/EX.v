@@ -12,7 +12,12 @@ module EX(
     output wire data_sram_en,
     output wire [3:0] data_sram_wen,
     output wire [31:0] data_sram_addr,
-    output wire [31:0] data_sram_wdata
+    output wire [31:0] data_sram_wdata,
+
+    //
+    output wire [37:0] ex_to_id_bus
+    //
+
 );
 
     reg [`ID_TO_EX_WD-1:0] id_to_ex_bus_r;
@@ -105,6 +110,16 @@ module EX(
         .inb        (      ), // 乘法源操作数2
         .result     (mul_result     ) // 乘法结果 64bit
     );
+
+
+
+    ///
+    assign ex_to_id_bus = {
+        rf_we,          // 37
+        rf_waddr,       // 36:32
+        ex_result       // 31:0
+    };
+    ///
 
     // DIV part
     wire [63:0] div_result;

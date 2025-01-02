@@ -13,6 +13,10 @@ module MEM(
 
     reg [`EX_TO_MEM_WD-1:0] ex_to_mem_bus_r;
 
+// `define StallBus 6
+// `define NoStop 1'b0
+// `define Stop 1'b1
+
     always @ (posedge clk) begin
         if (rst) begin
             ex_to_mem_bus_r <= `EX_TO_MEM_WD'b0;

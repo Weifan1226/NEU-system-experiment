@@ -1,13 +1,13 @@
 `include "lib/defines.vh"
 module IF(
-    input wire clk,           //Ê±ÖÓÐÅºÅ
-    input wire rst,           //¸´Î»ÐÅºÅ
+    input wire clk,           //Ê±ï¿½ï¿½ï¿½Åºï¿½
+    input wire rst,           //ï¿½ï¿½Î»ï¿½Åºï¿½
     input wire [`StallBus-1:0] stall,
+    input wire [`BR_WD-1:0] br_bus,
 
     // input wire flush,
     // input wire [31:0] new_pc,
 
-    input wire [`BR_WD-1:0] br_bus,
 
     output wire [`IF_TO_ID_WD-1:0] if_to_id_bus,
 

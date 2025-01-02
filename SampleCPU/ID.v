@@ -18,9 +18,16 @@ module ID(
     output wire [`BR_WD-1:0] br_bus, 
 
     //
-    input wire [37:0] ex_to_id_bus
+    input wire inst_is_load,//for point1, stop at 00714
+    output wire stallreq_for_id,//for point1, stop at 00714
+    input wire ready_ex_to_id, //for point1, stop at 00714
+    input wire [37:0] ex_to_id_bus//for point1, stop at 006bc
     //
 );
+    ///
+    reg [31:0] inst_stall;
+    reg inst_stall_en;
+    ///
 
     reg [`IF_TO_ID_WD-1:0] if_to_id_bus_r;
     wire [31:0] inst;
@@ -45,8 +52,23 @@ module ID(
             if_to_id_bus_r <= if_to_id_bus;
         end
     end
+    ////
+    always @ (posedge clk) begin
+        inst_stall_en<=1'b0;
+        inst_stall <=32'b0;
+        if(stall[1] == 1'b1 & ready_ex_to_id ==1'b0)begin
+        inst_stall <= inst;
+        inst_stall_en<=1'b1;
+        end
     
-    assign inst = inst_sram_rdata;
+    end
+    assign inst_stall1 = inst_stall;
+    assign inst_stall_en1 = inst_stall_en ;
+    
+    assign inst = inst_stall_en1 ? inst_stall1  :inst_sram_rdata;
+    ////
+
+   //assign inst = inst_sram_rdata;
     assign {
         ce,
         id_pc
@@ -109,6 +131,10 @@ module ID(
     assign base = inst[25:21];
     assign offset = inst[15:0];
     assign sel = inst[2:0];
+
+    ///
+    assign stallreq_for_id = (inst_is_load == 1'b1 && (rs == ex_to_id_bus[36:32] || rt == ex_to_id_bus[36:32] ));
+    ///
 
     wire inst_ori, inst_lui, inst_addiu, inst_beq;
 

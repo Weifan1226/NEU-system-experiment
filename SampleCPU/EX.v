@@ -15,6 +15,9 @@ module EX(
     output wire [31:0] data_sram_wdata,
 
     //
+    output wire inst_is_load,
+    output wire stallreq_for_ex,
+    output wire ready_ex_to_id,
     output wire [37:0] ex_to_id_bus
     //
 
@@ -63,6 +66,11 @@ module EX(
         rf_rdata1,         // 63:32
         rf_rdata2          // 31:0
     } = id_to_ex_bus_r;
+
+    ///
+    assign inst_is_load =  (inst[31:26] == 6'b10_0011) ? 1'b1 :1'b0;
+    
+    ///
 
     wire [31:0] imm_sign_extend, imm_zero_extend, sa_zero_extend;
     assign imm_sign_extend = {{16{inst[15]}},inst[15:0]};
@@ -126,8 +134,10 @@ module EX(
     wire inst_div, inst_divu;
     wire div_ready_i;
     reg stallreq_for_div;
-    assign stallreq_for_ex = stallreq_for_div;
-
+    ///
+    assign stallreq_for_ex = (stallreq_for_div & div_ready_i==1'b0);
+    assign ready_ex_to_id = div_ready_i;
+    ///
     reg [31:0] div_opdata1_o;
     reg [31:0] div_opdata2_o;
     reg div_start_o;

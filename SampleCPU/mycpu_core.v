@@ -30,6 +30,8 @@ module mycpu_core(
     wire [`WB_TO_RF_WD-1:0] wb_to_rf_bus;
     wire [`StallBus-1:0] stall;
     ///
+    wire inst_is_load;
+    wire ready_ex_to_id;
     wire [37:0] ex_to_id_bus;
     ///
 
@@ -53,10 +55,13 @@ module mycpu_core(
         .stallreq        (stallreq        ),
         .if_to_id_bus    (if_to_id_bus    ),
         .inst_sram_rdata (inst_sram_rdata ),
+        .inst_is_load    (inst_is_load),
         .wb_to_rf_bus    (wb_to_rf_bus    ),
         .id_to_ex_bus    (id_to_ex_bus    ),
+        .stallreq_for_id (stallreq_for_id),
         .br_bus          (br_bus          ),
-        .ex_to_id_bus    (ex_to_id_bus)
+        .ex_to_id_bus    (ex_to_id_bus),
+        .ready_ex_to_id (ready_ex_to_id)
     );
 
     EX u_EX(
@@ -69,7 +74,10 @@ module mycpu_core(
         .data_sram_wen   (data_sram_wen   ),
         .data_sram_addr  (data_sram_addr  ),
         .data_sram_wdata (data_sram_wdata ),
-        .ex_to_id_bus    (ex_to_id_bus)
+        .stallreq_for_ex(stallreq_for_ex),
+        .inst_is_load    (inst_is_load),
+        .ex_to_id_bus    (ex_to_id_bus),
+        .ready_ex_to_id (ready_ex_to_id)
     );
 
     MEM u_MEM(
@@ -95,7 +103,9 @@ module mycpu_core(
 
     CTRL u_CTRL(
     	.rst   (rst   ),
-        .stall (stall )
+        .stall (stall ),
+        .stallreq_for_id(stallreq_for_id),
+        .stallreq_for_ex(stallreq_for_ex)
     );
     
 endmodule

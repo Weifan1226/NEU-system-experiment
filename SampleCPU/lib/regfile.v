@@ -31,8 +31,10 @@ module regfile(
     } = ex_to_id_bus;
 
     // read out 1
-    assign rdata1 = (raddr1 == 5'b0) ? 32'b0 : reg_array[raddr1];
+    assign rdata1 = (raddr1 == 5'b0) ? 32'b0 : ((raddr1 == ex_rf_waddr)&& ex_rf_we) ? ex_result :
+    reg_array[raddr1];
 
     // read out2
-    assign rdata2 = (raddr2 == 5'b0) ? 32'b0 : reg_array[raddr2];
+    assign rdata2 = (raddr2 == 5'b0) ? 32'b0 : ((raddr2 == ex_rf_waddr)&& ex_rf_we) ? ex_result : 
+    reg_array[raddr2];
 endmodule

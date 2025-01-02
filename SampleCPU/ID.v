@@ -33,18 +33,11 @@ module ID(
     
 //    output wire [67:0] id_to_ex_2,
 
-<<<<<<< HEAD
     output wire [`BR_WD-1:0] br_bus, 
 
     //
     input wire [37:0] ex_to_id_bus
     //
-=======
-    output wire [`BR_WD-1:0] br_bus,
-    
-    input wire [65:0] wb_to_id_wf,
-    input wire ready_ex_to_id
->>>>>>> c1dd5ec67497be11991c01460a5297696e44cc1b
 );
     reg [31:0] inst_stall;
     reg inst_stall_en;
@@ -166,27 +159,7 @@ module ID(
         .we     (wb_rf_we     ),
         .waddr  (wb_rf_waddr  ),
         .wdata  (wb_rf_wdata  ),
-<<<<<<< HEAD
         .ex_to_id_bus    (ex_to_id_bus)
-=======
-        .ex_to_id_bus(ex_to_id_bus),
-        .mem_to_id_bus(mem_to_id_bus),
-        .wb_to_id_bus(wb_to_id_bus),
-        .ex_to_id_2(ex_to_id_2),
-        .mem_to_id_2(mem_to_id_2),
-        .wb_to_id_2(wb_to_id_2),
-        //write
-        .w_hi_we  (w_hi_we),
-        .w_lo_we  (w_lo_we),
-        .hi_i(hi_i),
-        .lo_i(lo_i),
-        //read
-        .r_hi_we (lo_hi_r[0]),
-        .r_lo_we (lo_hi_r[1]),
-        .hi_o(hi_o),
-        .lo_o(lo_o),
-        .inst_lsa(inst_lsa)
->>>>>>> c1dd5ec67497be11991c01460a5297696e44cc1b
     );
     
     

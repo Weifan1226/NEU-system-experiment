@@ -29,6 +29,9 @@ module ID(
     ///
     reg [31:0] inst_stall;
     reg inst_stall_en;
+     //新添加的stall线网
+    wire [31:0]inst_stall1;
+    wire inst_stall_en1;
     ///
 
     reg [`IF_TO_ID_WD-1:0] if_to_id_bus_r;
@@ -39,6 +42,9 @@ module ID(
     wire wb_rf_we;
     wire [4:0] wb_rf_waddr;
     wire [31:0] wb_rf_wdata;
+
+
+    
 
     always @ (posedge clk) begin
         if (rst) begin

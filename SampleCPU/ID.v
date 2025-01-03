@@ -21,7 +21,9 @@ module ID(
     input wire inst_is_load,//for point1, stop at 00714
     output wire stallreq_for_id,//for point1, stop at 00714
     input wire ready_ex_to_id, //for point1, stop at 00714
-    input wire [37:0] ex_to_id_bus//for point1, stop at 006bc
+    input wire [37:0] ex_to_id_bus, //for point1, stop at 006bc
+    input wire [37:0] mem_to_id_bus,
+    input wire [37:0] wb_to_id_bus
     //
 );
     ///
@@ -116,6 +118,8 @@ module ID(
         .we     (wb_rf_we     ),
         .waddr  (wb_rf_waddr  ),
         .wdata  (wb_rf_wdata  ),
+        .mem_to_id_bus(mem_to_id_bus),
+        .wb_to_id_bus(wb_to_id_bus),
         .ex_to_id_bus    (ex_to_id_bus)
     );
 

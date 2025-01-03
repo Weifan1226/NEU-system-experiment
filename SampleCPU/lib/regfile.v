@@ -20,6 +20,16 @@ module regfile(
     end
 
 
+    wire [31:0] mem_rf_wdata;
+    wire mem_rf_we;
+    wire [4:0] mem_rf_waddr;
+    // wire [31:0] bbb;
+    assign {
+        mem_rf_we,      // 37
+        mem_rf_waddr,   // 36:32
+        mem_rf_wdata    // 31:0
+    } = mem_to_id_bus;
+
 
     wire ex_rf_we;
     wire [4:0] ex_rf_waddr;
@@ -31,11 +41,17 @@ module regfile(
     } = ex_to_id_bus;
 
     // read out 1
-    assign rdata1 = (raddr1 == 5'b0) ? 32'b0 : ((raddr1 == ex_rf_waddr)&& ex_rf_we) ? ex_result :
+    assign rdata1 = (raddr1 == 5'b0) ? 32'b0 : 
+    ((raddr1 == ex_rf_waddr)&& ex_rf_we) ? ex_result :
+    ((raddr1 == mem_rf_waddr)&& mem_rf_we) ? mem_rf_wdata : 
+    ((raddr1 == wb1_rf_waddr)&& wb1_rf_we) ? wb1_rf_wdata : 
     reg_array[raddr1];
 
     // read out2
-    assign rdata2 = (raddr2 == 5'b0) ? 32'b0 : ((raddr2 == ex_rf_waddr)&& ex_rf_we) ? ex_result : 
+    assign rdata2 = (raddr2 == 5'b0) ? 32'b0 : 
+    ((raddr2 == ex_rf_waddr)&& ex_rf_we) ? ex_result : 
+    ((raddr2 == mem_rf_waddr)&& mem_rf_we) ? mem_rf_wdata : 
+    ((raddr2 == wb1_rf_waddr)&& wb1_rf_we) ? wb1_rf_wdata : 
     reg_array[raddr2];
 
 

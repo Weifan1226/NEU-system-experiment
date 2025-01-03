@@ -118,8 +118,8 @@ module ID(
         .we     (wb_rf_we     ),
         .waddr  (wb_rf_waddr  ),
         .wdata  (wb_rf_wdata  ),
-        .mem_to_id_bus(mem_to_id_bus),
-        .wb_to_id_bus(wb_to_id_bus),
+        .mem_to_id_bus (mem_to_id_bus),
+        .wb_to_id_bus (wb_to_id_bus),
         .ex_to_id_bus    (ex_to_id_bus)
     );
 

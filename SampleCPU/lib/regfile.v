@@ -9,9 +9,9 @@ module regfile(
     input wire we,
     input wire [4:0] waddr,
     input wire [31:0] wdata,
-    input wire [37:0] ex_to_id_bus
-
-    input wire [37:0] wb_to_id_bus,
+    input wire [37:0] ex_to_id_bus,
+    input wire [37:0] mem_to_id_bus,
+    input wire [37:0] wb_to_id_bus
 );
     reg [31:0] reg_array [31:0];
     // write
@@ -42,11 +42,14 @@ module regfile(
         ex_result       // 31:0
     } = ex_to_id_bus;
 
+    wire [31:0] wb1_rf_wdata;
+    wire wb1_rf_we;
+    wire [4:0] wb1_rf_waddr;
     assign {
         wb1_rf_we,      // 37
         wb1_rf_waddr,   // 36:32
         wb1_rf_wdata    // 31:0
-    } = wb_to_id_bus;
+    } = wb_to_id_bus; //qweqweqe
 
     
     // read out 1

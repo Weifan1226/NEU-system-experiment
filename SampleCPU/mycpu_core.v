@@ -32,10 +32,21 @@ module mycpu_core(
     ///
     wire inst_is_load;
     wire ready_ex_to_id;
+    wire stallreq_for_ex;
+
     wire [37:0] mem_to_id_bus;
     wire [37:0] wb_to_id_bus;
     wire [37:0] ex_to_id_bus;
     ///
+
+    ///乘除法相关
+    wire [65:0]ex_to_mem1;
+    wire [65:0]mem_to_wb1;
+    wire [65:0]wb_to_id_wf;
+
+    wire [65:0]ex_to_id_2;
+    wire [65:0]mem_to_id_2;
+    wire [65:0]wb_to_id_2;
 
     IF u_IF(
     	.clk             (clk             ),
@@ -65,6 +76,12 @@ module mycpu_core(
         .stallreq_for_id (stallreq_for_id),
         .br_bus          (br_bus          ),
         .ex_to_id_bus    (ex_to_id_bus),
+        ///乘除法相关
+        .wb_to_id_wf     (wb_to_id_wf),
+        .ex_to_id_2      (ex_to_id_2),
+        .mem_to_id_2     (mem_to_id_2),
+        .wb_to_id_2      (wb_to_id_2),
+        //
         .ready_ex_to_id (ready_ex_to_id)
     );
 
@@ -81,6 +98,10 @@ module mycpu_core(
         .stallreq_for_ex(stallreq_for_ex),
         .inst_is_load    (inst_is_load),
         .ex_to_id_bus    (ex_to_id_bus),
+        //乘除法相关
+        .ex_to_mem1      (ex_to_mem1),
+        .ex_to_id_2      (ex_to_id_2),
+        //
         .ready_ex_to_id (ready_ex_to_id)
     );
 
@@ -91,7 +112,11 @@ module mycpu_core(
         .ex_to_mem_bus   (ex_to_mem_bus   ),
         .mem_to_id_bus   (mem_to_id_bus   ),
         .data_sram_rdata (data_sram_rdata ),
-        .mem_to_wb_bus   (mem_to_wb_bus   )
+        .mem_to_wb_bus   (mem_to_wb_bus   ),
+        //乘除法相关
+        .ex_to_mem1      (ex_to_mem1),
+        .mem_to_wb1      (mem_to_wb1),
+        .mem_to_id_2     (mem_to_id_2)
     );
     
     WB u_WB(
@@ -104,7 +129,11 @@ module mycpu_core(
         .wb_to_id_bus    (wb_to_id_bus     ),
         .debug_wb_rf_wen   (debug_wb_rf_wen   ),
         .debug_wb_rf_wnum  (debug_wb_rf_wnum  ),
-        .debug_wb_rf_wdata (debug_wb_rf_wdata )
+        .debug_wb_rf_wdata (debug_wb_rf_wdata ),
+        //乘除法相关
+        .mem_to_wb1        (mem_to_wb1),
+        .wb_to_id_wf      (wb_to_id_wf),
+        .wb_to_id_2       (wb_to_id_2)
     );
 
     CTRL u_CTRL(

@@ -23,8 +23,15 @@ module ID(
     input wire ready_ex_to_id, //for point1, stop at 00714
     input wire [37:0] ex_to_id_bus, //for point1, stop at 006bc
     input wire [37:0] mem_to_id_bus,
-    input wire [37:0] wb_to_id_bus
+    input wire [37:0] wb_to_id_bus,
     //
+
+    ///乘法相关
+    input wire [65:0] ex_to_id_2,
+    input wire[65:0] mem_to_id_2,
+    input wire[65:0] wb_to_id_2, 
+    input wire [65:0] wb_to_id_wf
+    ///
 );
     ///
     reg [31:0] inst_stall;
@@ -43,7 +50,9 @@ module ID(
     wire [4:0] wb_rf_waddr;
     wire [31:0] wb_rf_wdata;
 
+    ///乘法相关
 
+    ///
     
 
     always @ (posedge clk) begin
@@ -115,9 +124,32 @@ module ID(
     wire [31:0] rdata1, rdata2;
     wire [3:0] data_ram_read;
 
+    ///乘法相关
+    wire [1:0] lo_hi_r;
+    wire [1:0] lo_hi_w;
+    wire[31:0] hi_o;
+    wire[31:0] lo_o;
+    wire w_hi_we;
+    wire w_lo_we;
+    wire [31:0]hi_i;
+    wire [31:0]lo_i;
+    wire inst_lsa;
+
+    ///
+
+
+    ///wb_to_id_mul
+    assign 
+    {
+        w_hi_we,
+        w_lo_we,
+        hi_i,
+        lo_i
+    } = wb_to_id_wf;
 
 
     regfile u_regfile(
+        .inst   (inst),
     	.clk    (clk    ),
         .raddr1 (rs ),
         .rdata1 (rdata1 ),
@@ -128,7 +160,22 @@ module ID(
         .wdata  (wb_rf_wdata  ),
         .mem_to_id_bus (mem_to_id_bus),
         .wb_to_id_bus (wb_to_id_bus),
-        .ex_to_id_bus    (ex_to_id_bus)
+        .ex_to_id_bus    (ex_to_id_bus),
+        //lo_hi_store
+        .ex_to_id_2(ex_to_id_2),
+        .mem_to_id_2(mem_to_id_2),
+        .wb_to_id_2(wb_to_id_2),
+        //write
+        .w_hi_we  (w_hi_we),
+        .w_lo_we  (w_lo_we),
+        .hi_i(hi_i),
+        .lo_i(lo_i),
+        //read
+        .r_hi_we (lo_hi_r[0]),
+        .r_lo_we (lo_hi_r[1]),
+        .hi_o(hi_o),
+        .lo_o(lo_o),
+        .inst_lsa(inst_lsa)
     );
 
     assign opcode = inst[31:26];
@@ -266,6 +313,15 @@ module ID(
     assign sel_alu_src2[3] = inst_ori | inst_andi | inst_xori;
 
 
+    ///乘法相关
+    // lo   to
+    assign lo_hi_r[0] = inst_mflo;
+    
+    // hi   to
+    assign lo_hi_r[1] = inst_mfhi;
+    ///
+
+
     // 添加操作码
     assign op_add = inst_addiu | inst_jal | inst_addu | inst_lw | inst_sw | inst_add | inst_addi | inst_bgezal | inst_bltzal
          | inst_jalr | inst_lb | inst_lbu | inst_lh | inst_lhu | inst_sb | inst_sh | inst_lsa;
@@ -318,6 +374,13 @@ module ID(
     assign sel_rf_dst[1] = inst_ori | inst_lui | inst_addiu | inst_lw | inst_slti | inst_sltiu | inst_addi | inst_andi | inst_xori | inst_lb | inst_lbu | inst_lh | inst_lhu;
     // store in [31]
     assign sel_rf_dst[2] = inst_jal | inst_bgezal | inst_bltzal ;
+   
+    // store in lo
+    assign lo_hi_w[0] = inst_mtlo;
+    
+    // store in hi
+    assign lo_hi_w[1] = inst_mthi ;
+   
     // sel for regfile address
     assign rf_waddr = {5{sel_rf_dst[0]}} & rd 
                     | {5{sel_rf_dst[1]}} & rt
@@ -339,6 +402,10 @@ module ID(
         sel_rf_res,     // 64
         rdata1,         // 63:32
         rdata2,     // 31:0
+        lo_hi_r,                        //使能信号1
+        lo_hi_w,                        //使能信号2
+        lo_o,                           //
+        hi_o, 
         data_ram_read
     };
 
